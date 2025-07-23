@@ -1,22 +1,40 @@
-// Revels Bot - Messenger-style Fun Chatbot with c3c/appstate login // Author: ChatGPT (Customized for user)
+require('dotenv').config();
+const fs = require("fs");
 
-const express = require("express"); const bodyParser = require("body-parser"); const fs = require("fs"); const app = express();
+const adminUIDs = [process.env.ADMIN_UID1, process.env.ADMIN_UID2];
+const botName = process.env.BOTNAME || "Bot";
 
-app.use(bodyParser.json());
+const readline = require("readline");
 
-// Load admin config const config = { ADMIN: ["6155600411186", "SECOND_ADMIN_UID"], BOTNAME: "Revels Bot", PREFIX: "" };
+const replies = [
+  "Ki bolish re vai 🤣",
+  "Tui je ekta legendary clown 😂",
+  "Eto funny tor matha naki Google server? 🤯",
+  "Bot er mathay jhamela 🤖",
+  "Eita shune amar circuit fried 🧠🔥"
+];
 
-// Sample fun responses for known commands const commands = { "hi": "Ki re pagol? 😜", "hello": "Oi pagla! Kemon asis? 😆", "ami ki pagol": "Toke niye Google-o confused! 🫠", "koi tui": "Bondhu tui ki jail e geli? 😂", "valo asi": "Toke bhalo dekhlei din bhalo lage ❤️", "bye": "Ja pagla, abar ayish 😢", "bot": "Ami hochi Revels Bot, tomar bondhu! 🤖", "joke": "Teacher: Fail korli keno? Student: Question-e emotion chhilo na sir 😎", "help": "Commands: hi, hello, ami ki pagol, koi tui, bot, bye, joke...", "revels": "E bot tomar dost der maje hungama korte ashche! Revels Bot reporting in! 🎉" };
+function getRandomReply() {
+  return replies[Math.floor(Math.random() * replies.length)];
+}
 
-// Random funny fallback replies const fallbackReplies = [ "Tor mathay thik ache to? 🙄", "Pagol pagol lage tui! 😂", "Tui ki amar sathe moja korchis? 😜", "Ami hoilam bot, prem korta pari na 😍", "Kisu bujhlam na, abar bol! 🤯", "Kichu akta bolli... jeta universe bojhe na 😱", "Tui kotha bollei moja lage! 😊" ];
+console.log(`🤖 ${botName} is running...`);
 
-// Endpoint to simulate message receiving app.post("/chat", (req, res) => { const message = req.body.message.toLowerCase();
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
 
-// Find matching command let response = null; for (const key in commands) { if (message.includes(key)) { response = commands[key]; break; } }
+rl.setPrompt("👤 You: ");
+rl.prompt();
 
-// Fallback random reply if (!response) { response = fallbackReplies[Math.floor(Math.random() * fallbackReplies.length)]; }
-
-res.json({ reply: response }); });
-
-// Start server const PORT = process.env.PORT || 3000; app.listen(PORT, () => { console.log(${config.BOTNAME} is running on port ${PORT}); });
-
+rl.on("line", (msg) => {
+  const uid = "6155600411186"; // pretend incoming user
+  if (adminUIDs.includes(uid)) {
+    const reply = getRandomReply();
+    console.log(`🤖 ${botName}: ${reply}`);
+  } else {
+    console.log("🤖 Access denied.");
+  }
+  rl.prompt();
+});
